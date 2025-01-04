@@ -1,0 +1,12 @@
+POST http://localhost:5000/api/auth/login
+Accept: application/json
+Content-Type: application/json
+{
+  "username":"noyon",
+  "email":"noyon.codeware@gmail.com",
+  "password":"123456"
+}
+###
+
+GET http://localhost/api/purchasedFeaturesStatus
+Authorization: Bearer 65519b8a54fa4064b810f1f9

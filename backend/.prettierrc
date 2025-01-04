@@ -1,0 +1,22 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": false,
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 100,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "dotenv/config",
+    "<THIRD_PARTY_MODULES>",
+    "#controllers",
+    "#models",
+    "#routes",
+    "#repositories",
+    "#utils|#config",
+    "^..?/(.*)|^#(.*)"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
