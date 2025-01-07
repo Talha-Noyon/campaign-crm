@@ -1,5 +1,12 @@
 import {getChannel} from '#utils/RabbitMQ.js'
 
+export function sendTaskToQueue(queueName, task) {
+  channel.sendToQueue(queueName, Buffer.from(JSON.stringify(task)), {
+    persistent: true,
+    headers: {retryCount: task.retryCount}
+  })
+}
+
 /**
  * Generic worker wrapper for RabbitMQ tasks.
  * @param {string} queue - The name of the queue to consume from.
@@ -34,11 +41,7 @@ export const createWorker = async (queue, taskProcessor, maxRetries = 5) => {
         if (retryCount < maxRetries) {
           // Increment retry count and re-queue the task
           task.retryCount = retryCount + 1
-          channel.sendToQueue(queue, Buffer.from(JSON.stringify(task)), {
-            persistent: true,
-            headers: {retryCount: task.retryCount}
-          })
-
+          sendTaskToQueue(queue, task)
           // Acknowledge the original message
           channel.ack(msg)
         } else {

@@ -1,6 +1,6 @@
 import amqplib from 'amqplib'
 
-import {env} from '#utils/Env.js'
+import {env} from '#middleware/schemas/EnvSchema.js'
 
 let connection
 let channel
@@ -9,7 +9,7 @@ let channel
  * Initialize RabbitMQ connection and channel from https://www.cloudamqp.com/.
  * @returns {Promise<void>}
  */
-export const connectRabbitMQ = async () => {
+export async function connectRabbitMQ() {
   try {
     connection = await amqplib.connect(env.RABBITMQ_URI)
     channel = await connection.createChannel()
@@ -24,7 +24,7 @@ export const connectRabbitMQ = async () => {
  * Get the RabbitMQ channel.
  * @returns {amqplib.Channel} RabbitMQ channel.
  */
-export const getChannel = () => {
+export function getChannel() {
   if (!channel) {
     throw new Error('RabbitMQ channel is not initialized')
   }
@@ -35,7 +35,7 @@ export const getChannel = () => {
  * Close RabbitMQ connection.
  * @returns {Promise<void>}
  */
-export const closeRabbitMQ = async () => {
+export async function closeRabbitMQ() {
   try {
     await channel.close()
     await connection.close()

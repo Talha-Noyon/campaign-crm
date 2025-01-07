@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
-import {env} from '#utils/Env.js'
+import {env} from '#middleware/schemas/EnvSchema.js'
 
-const connectDB = async () => {
+export async function connectDB() {
   try {
     await mongoose.connect(env.MONGO_URI)
     console.log('MongoDB connected')

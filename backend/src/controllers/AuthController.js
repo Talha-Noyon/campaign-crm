@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken'
 
-import User from '#models/User.js'
+import UserModel from '#models/User.js'
 
-import {env} from '#utils/Env.js'
+import {env} from '#middleware/schemas/EnvSchema.js'
+import {appErrorLog} from '#services/Log.js'
 
 const JWT_SECRET = env.JWT_SECRET
 
@@ -15,7 +16,7 @@ const JWT_SECRET = env.JWT_SECRET
  * @returns {string} JWT token.
  */
 
-const generateToken = (user) => {
+function generateToken(user) {
   return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1d'})
 }
 
@@ -27,17 +28,18 @@ const generateToken = (user) => {
  * @returns {Promise<void>}
  */
 
-export const register = async (request, response) => {
+export async function register(request, response) {
   try {
     const {username, email, password, role} = request.body
-    const existingUser = await User.findOne({email})
+    const existingUser = await UserModel.findOne({email})
     if (existingUser) {
       return response.status(400).json({message: 'Email already in use'})
     }
 
-    const user = await User.create({username, email, password, role})
+    const user = await UserModel.create({username, email, password, role})
     response.status(201).json({message: 'User registered successfully', user})
   } catch (error) {
+    appErrorLog({type: 'register', body: request.body, error: error.stack})
     response.status(500).json({error: error.message})
   }
 }
@@ -50,10 +52,10 @@ export const register = async (request, response) => {
  * @returns {Promise<void>}
  */
 
-export const login = async (request, response) => {
+export async function login(request, response) {
   try {
     const {email, password} = request.body
-    const user = await User.findOne({email})
+    const user = await UserModel.findOne({email})
     if (!user || !(await user.comparePassword(password))) {
       return response.status(401).json({message: 'Invalid email or password'})
     }
@@ -61,6 +63,7 @@ export const login = async (request, response) => {
     const token = generateToken(user)
     response.status(200).json({message: 'Login successful', token})
   } catch (error) {
+    appErrorLog({type: 'login', body: request.body, error: error.stack})
     response.status(500).json({error: error.message})
   }
 }

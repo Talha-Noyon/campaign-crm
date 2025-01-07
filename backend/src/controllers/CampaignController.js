@@ -1,12 +1,15 @@
-import Campaign from '#models/Campaign.js'
+import CampaignModel from '#models/Campaign.js'
 
 import {getChannel} from '#utils/RabbitMQ.js'
 
-export const getCampaigns = async (request, response) => {
+import {sendTaskToQueue} from '#worker/WorkerWrapper.js'
+
+export async function getCampaigns(request, response) {
   try {
-    const campaigns = await Campaign.find({createdBy: request.user.id})
+    const campaigns = await CampaignModel.find({createdBy: request.user.id})
     response.status(200).json(campaigns)
   } catch (error) {
+    appErrorLog({type: 'getCampaigns', body: request.body, error: error.stack})
     response.status(500).json({error: error.message})
   }
 }
@@ -17,23 +20,19 @@ export const getCampaigns = async (request, response) => {
  * @param {import('express').Request} request - Express request object.
  * @param {import('express').Response} response - Express response object.
  */
-export const createCampaign = async (request, response) => {
+export async function createCampaign(request, response) {
   try {
     const {name, message, recipients, scheduleTime} = request.body
     // Publish task to RabbitMQ
     const channel = getChannel()
-    const queue = 'campaign_queue'
+    const queue = 'pending-queue-when-initiate'
     const task = {name, message, recipients, scheduleTime, createdBy: request.user.id}
 
-    await channel.assertQueue(queue, {durable: true})
-    channel.sendToQueue(queue, Buffer.from(JSON.stringify(task)), {
-      persistent: true,
-      headers: {retryCount: 0}
-    })
+    sendTaskToQueue(queue, task)
 
     response.status(201).json({message: 'Campaign queued for processing'})
   } catch (error) {
-    console.error('Error queuing campaign:', error)
+    appErrorLog({type: 'createCampaign', body: request.body, error: error.stack})
     response.status(500).json({error: 'Failed to queue campaign'})
   }
 }
