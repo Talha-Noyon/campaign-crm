@@ -1,5 +1,13 @@
 import mongoose from 'mongoose'
 
+const StatusDetailsSchema = new mongoose.Schema(
+  {
+    processStartTime: {type: Number, required: true},
+    processingTime: {type: Number, required: true},
+    processEndTime: {type: Number, required: true}
+  },
+  {_id: false}
+)
 const campaignSchema = new mongoose.Schema(
   {
     name: {type: String, required: true},
@@ -7,7 +15,8 @@ const campaignSchema = new mongoose.Schema(
     recipients: [{type: String, required: true}],
     scheduleTime: {type: Number, required: true},
     statusDetailsByRecipients: {
-      type: Object,
+      type: Map,
+      of: StatusDetailsSchema,
       required: true
     },
     status: {
