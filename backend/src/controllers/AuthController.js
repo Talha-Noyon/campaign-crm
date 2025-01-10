@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 import UserModel from '#models/User.js'
 
-import {env} from '#middleware/schemas/EnvSchema.js'
+import {env} from '#schemas/EnvSchema.js'
 import {appErrorLog} from '#services/Log.js'
 
 const JWT_SECRET = env.JWT_SECRET
@@ -25,7 +25,6 @@ function generateToken(user) {
  *
  * @param {import('express').Request} request - Express request object.
  * @param {import('express').Response} response - Express response object.
- * @returns {Promise<void>}
  */
 
 export async function register(request, response) {
@@ -49,7 +48,6 @@ export async function register(request, response) {
  *
  * @param {import('express').Request} request - Express request object.
  * @param {import('express').Response} response - Express response object.
- * @returns {Promise<void>}
  */
 
 export async function login(request, response) {

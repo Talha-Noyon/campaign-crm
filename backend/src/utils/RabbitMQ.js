@@ -1,6 +1,6 @@
 import amqplib from 'amqplib'
 
-import {env} from '#middleware/schemas/EnvSchema.js'
+import {env} from '#schemas/EnvSchema.js'
 
 let connection
 let channel

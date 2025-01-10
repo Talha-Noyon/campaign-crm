@@ -4,7 +4,7 @@ import express from 'express'
 import {login, register} from '#controllers/AuthController.js'
 
 import {zodValidator} from '#middleware/ZodMiddleware.js'
-import {loginSchema, registerSchema} from '#middleware/schemas/UserSchema.js'
+import {loginSchema, registerSchema} from '#schemas/UserSchema.js'
 
 const router = express.Router()
 
@@ -14,11 +14,7 @@ const router = express.Router()
  *
  * @name RegisterUser
  * @route {POST} /auth/register
- * @body {Object} - User registration data.
- * @body {string} username - The username of the user.
- * @body {string} email - The email address of the user.
- * @body {string} password - The password of the user.
- * @body {string} [role] - The role of the user (admin or campaign_manager).
+ * @body {import('#types').RegisterUser} - User registration data.
  * @returns {Object} 201 - User successfully registered.
  * @returns {Object} 400 - Validation error or email already in use.
  */
@@ -31,8 +27,7 @@ router.post('/register', zodValidator(registerSchema), register)
  * @name LoginUser
  * @route {POST} /auth/login
  * @body {Object} - User login data.
- * @body {string} email - The email address of the user.
- * @body {string} password - The password of the user.
+ * @body {import('#types').LoginUser} - Login user data.
  * @returns {Object} 200 - User successfully logged in with a token.
  * @returns {Object} 401 - Invalid email or password.
  */
