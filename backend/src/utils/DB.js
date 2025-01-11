@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import {env} from '#schemas/EnvSchema.js'
+import {env} from '#shared/schemas/EnvSchema.js'
 
 export async function connectDB() {
   try {

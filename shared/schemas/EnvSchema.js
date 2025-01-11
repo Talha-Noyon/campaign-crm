@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import {z} from 'zod'
 
-const toNumberSchema = z.preprocess((value) => parseFloat(value), z.number())
+import {toNumberSchema} from '#schemas/CommonSchemas.js'
 
 const envSchema = z.object({
   JWT_SECRET: z.string().nonempty(),

@@ -2,8 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "#*": ["src/*"]
+      "#*": ["src/*"],
+      "#shared/*": ["#../../../shared/*"]
     },
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
     "checkJs": true
   }
 }

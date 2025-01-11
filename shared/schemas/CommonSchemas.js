@@ -1,5 +1,10 @@
 import {z} from 'zod'
 
+export const toNumberSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? parseFloat(value) : value),
+  z.number()
+)
+
 const StatusDetailsSchema = z.object({
   processStartTime: z.number(),
   processingTime: z.number(),

@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import authRoutes from '#routes/http/AuthRoutes.js'
 import campaignRoutes from '#routes/http/CampaignRoutes.js'
 
-import {env} from '#schemas/EnvSchema.js'
+import {env} from '#shared/schemas/EnvSchema.js'
 
 const app = express()
 // Middleware

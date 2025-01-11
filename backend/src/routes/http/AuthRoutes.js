@@ -4,7 +4,7 @@ import express from 'express'
 import {login, register} from '#controllers/AuthController.js'
 
 import {zodValidator} from '#middleware/ZodMiddleware.js'
-import {loginSchema, registerSchema} from '#schemas/UserSchema.js'
+import {loginSchema, registerSchema} from '#shared/schemas/UserSchema.js'
 
 const router = express.Router()
 

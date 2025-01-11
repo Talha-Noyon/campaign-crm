@@ -4,7 +4,7 @@ import {createCampaign, getCampaigns} from '#controllers/CampaignController.js'
 
 import {verifyToken} from '#middleware/AuthMiddleware.js'
 import {zodValidator} from '#middleware/ZodMiddleware.js'
-import {campaignSchema} from '#schemas/CampaignSchema.js'
+import {campaignSchema} from '#shared/schemas/CampaignSchema.js'
 
 const router = express.Router()
 

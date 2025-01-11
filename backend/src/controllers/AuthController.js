@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 
 import UserModel from '#models/User.js'
 
-import {env} from '#schemas/EnvSchema.js'
 import {appErrorLog} from '#services/Log.js'
+import {env} from '#shared/schemas/EnvSchema.js'
 
 const JWT_SECRET = env.JWT_SECRET
 
