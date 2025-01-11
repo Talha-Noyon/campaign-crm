@@ -1,9 +1,14 @@
-import {createServer} from 'http'
 import {Server} from 'socket.io'
 
 import app from '#utils/App.js'
 
-function socket(server) {
+import {env} from '#shared/schemas/EnvSchema.js'
+
+const PORT = env.PORT
+
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+
+function socket() {
   return new Server(server, {
     cors: {
       origin: '*',
@@ -13,8 +18,11 @@ function socket(server) {
   })
 }
 
-const server = createServer(app)
-export const socketIO = socket(server)
+export const socketIO = socket()
+
+/**
+ * @param {import('socket.io').Socket} socket - socket instance.
+ */
 
 function onConnection(socket) {
   socket.on('connect', () => {
