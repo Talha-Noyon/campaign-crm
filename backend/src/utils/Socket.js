@@ -25,6 +25,7 @@ export const socketIO = socket()
  */
 
 function onConnection(socket) {
+  console.log('onConnection', socket.id)
   socket.on('connect', () => {
     console.log('socket on', socket.id)
   })

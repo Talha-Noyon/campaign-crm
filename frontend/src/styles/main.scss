@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+em-emoji-picker {
+  /*
+  Available custom property configuration,
+  https://github.com/missive/emoji-mart/blob/main/packages/emoji-mart-website/example-custom-styles.html
+  */
+  --font-family: 'Inter', sans-serif;
+  --border-radius: none;
+  --rgb-color: 100, 116, 139;
+  --rgb-accent: 37, 99, 235;
+  --shadow: none;
+  --font-size: 14px;
+  height: 28rem;
+}
+
+::-webkit-scrollbar {
+  @apply tw-size-1;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply tw-bg-secondary-300;
+}
+
+.tw-border-reset {
+  @apply tw-border-0 tw-border-solid tw-border-secondary-200;
+}
+.tw-btn {
+  @apply tw-rounded tw-border-none tw-px-4 tw-py-2 tw-font-semibold tw-text-white;
+}
+
+.tw-btn-default {
+  @apply tw-bg-primary-500;
+}
+
+.tw-btn-danger {
+  @apply tw-bg-red-500;
+}
+button:not(:disabled),
+[type='button']:not(:disabled),
+[type='reset']:not(:disabled),
+[type='submit']:not(:disabled) {
+  cursor: pointer;
+}
+a,
+a:hover,
+a:not([href]):not([class]),
+a:not([href]):not([class]):hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+canvas {
+  user-select: none;
+}
+
+/* for animation issue */
+.\!\!tw-opacity-75 {
+  opacity: 0.75;
+}
+
+/* Inter */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter/Inter-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter/Inter-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter/Inter-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+/* Noto Sans Bengali */
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/Noto_Sans_Bengali/NotoSansBengali-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/Noto_Sans_Bengali/NotoSansBengali-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/Noto_Sans_Bengali/NotoSansBengali-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+/* Calibri */
+@font-face {
+  font-family: 'Calibri';
+  src: url('/fonts/Calibri/Calibri-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+/* Animations */
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem) scale(0.975);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0rem) scale(1);
+  }
+}
+
+/* todo: think better */
+@keyframes tw-ping {
+  75%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
