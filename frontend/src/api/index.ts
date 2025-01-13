@@ -4,7 +4,7 @@ import {fetcher} from '@/api/fetcher'
 import {useStore} from '@/store'
 import {getLocalAuth} from '@/store/LocalAuth'
 import {api} from '@/utils/Axios'
-import {campaignTypes, type FetchReportArgs} from '@shared/types/types'
+import {campaignTypes, type FetchReportArgs} from '@shared/types/index'
 
 export async function fetchReport({type, startDate, endDate}: FetchReportArgs) {
   const {data: report} = await api.get<Report>(

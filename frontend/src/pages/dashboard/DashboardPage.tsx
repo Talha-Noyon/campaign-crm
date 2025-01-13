@@ -1,4 +1,4 @@
-import {type ReportTypes} from '@shared/types/types'
+import {type ReportTypes} from '@shared/types/index'
 import {ErrorMessage, Field, Form, Formik} from 'formik'
 import {Activity, CheckCircle, PieChart, PlusCircle, Upload, XCircle} from 'lucide-react'
 import {useEffect, useState} from 'react'

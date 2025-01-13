@@ -8,8 +8,8 @@ import {createWorker, sendTaskToQueue} from '#worker/WorkerWrapper.js'
 
 /**
  * Mark as completed a campaign task.
- * @param {import('#types').Task} task - The task data from the RabbitMQ message.
- * @param {import('#types').StatusDetailsByRecipients} statusDetailsByRecipients - The task recipients email.
+ * @param {import('#shared/types/types').Task} task - The task data from the RabbitMQ message.
+ * @param {import('#shared/types/index').StatusDetailsByRecipients} statusDetailsByRecipients - The task recipients email.
  */
 async function changeCampaignStatus(task, statusDetailsByRecipients) {
   try {
@@ -32,7 +32,7 @@ async function changeCampaignStatus(task, statusDetailsByRecipients) {
 
 /**
  * Initiate a campaign task.
- * @param {import('#types').Task} task - The task data from the RabbitMQ message.
+ * @param {import('#shared/types/index').Task} task - The task data from the RabbitMQ message.
  */
 async function campaignTaskInitiate(task) {
   const processingQueueName = 'processing-queue'
@@ -65,7 +65,7 @@ async function campaignTaskInitiate(task) {
 
 /**
  * Processes a campaign task.
- * @param {import('#types').Task} task - The task data from the RabbitMQ message.
+ * @param {import('#shared/types/index').Task} task - The task data from the RabbitMQ message.
  */
 async function campaignTaskProcessing(task) {
   try {

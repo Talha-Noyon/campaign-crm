@@ -9,7 +9,7 @@ const JWT_SECRET = env.JWT_SECRET
 
 /**
  * Generate a JWT for a user.
- * @param {import('#shared/types').RegisteredUser} user - User object.
+ * @param {import('#shared/types/index').RegisteredUser} user - User object.
  * @returns {string} JWT token.
  */
 
@@ -19,7 +19,7 @@ function generateToken(user) {
 
 /**
  * Generate a JWT for a user.
- * @param {import('#shared/types').RegisteredUser} user - User object.
+ * @param {import('#shared/types/index').RegisteredUser} user - User object.
  * @returns {string} JWT token.
  */
 function generateRefreshToken(user) {

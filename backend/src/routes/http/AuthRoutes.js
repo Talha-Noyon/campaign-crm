@@ -13,7 +13,7 @@ const router = express.Router()
  *
  * @name RegisterUser
  * @route {POST} /auth/register
- * @body {import('#types').RegisterUser} - User registration data.
+ * @body {import('#shared/types/index').RegisterUser} - User registration data.
  * @returns {Object} 201 - User successfully registered.
  * @returns {Object} 400 - Validation error or email already in use.
  */
@@ -26,7 +26,7 @@ router.post('/register', zodValidator(registerSchema), register)
  * @name LoginUser
  * @route {POST} /auth/login
  * @body {Object} - User login data.
- * @body {import('#types').LoginUser} - Login user data.
+ * @body {import('#shared/types/index').LoginUser} - Login user data.
  * @returns {Object} 200 - User successfully logged in with a token.
  * @returns {Object} 401 - Invalid email or password.
  */
