@@ -48,6 +48,60 @@ export function isDiff<T>(
   return oldItems.some((item, index) => by(item) !== by(newItems[index]))
 }
 
+import {CalendarDateTime, getLocalTimeZone, now} from '@internationalized/date'
+import moment from 'moment'
+import ms from 'ms'
+
+import {type DateTimeRange} from '@/components/DatePicker'
+
+export const FULL_DATE_TIME = 'dddd, MMMM D, YYYY h:mm:ss A'
+export const MEDIUM_DATE_TIME = 'MMM D, YYYY h:mm A'
+
+export function getTodayRangeValue() {
+  const d = now(getLocalTimeZone())
+  const start = new CalendarDateTime(d.year, d.month, d.day, 0, 0, 0)
+  const end = start.add({days: 1}).subtract({seconds: 1})
+
+  return {start, end}
+}
+
+export function isUnder({start, end}: DateTimeRange, range: string) {
+  const startTimestamp = Date.parse(start.toString())
+  const endTimestamp = Date.parse(end.toString())
+
+  return endTimestamp - startTimestamp < ms(range)
+}
+
+export function toQueryFormat(date: string | number | Date) {
+  return moment(new Date(date)).format('DD/MM/YYYY h:mm A')
+}
+
+export function toRangeDateVariants(range: DateTimeRange) {
+  const {format: startDate, iso: startDateIso, unix: startDateUnix} = toDateVariants(range.start)
+  const {format: endDate, iso: endDateIso, unix: endDateUnix} = toDateVariants(range.end)
+
+  return {
+    startDate,
+    endDate,
+    startDateIso,
+    endDateIso,
+    startDateUnix,
+    endDateUnix
+  }
+}
+
+/** A legacy helper */
+export function toDateVariants(date: CalendarDateTime | Date) {
+  const momentDate = moment(date instanceof Date ? date : date.toDate(getLocalTimeZone()))
+  const utc = momentDate.utc().format()
+
+  return {
+    format: momentDate.format('DD-MM-YYYY h:mm:ss A'),
+    iso: utc,
+    unix: Date.parse(utc)
+  }
+}
+
 export const removeSocketListeners = (socket: Socket, eventNames: string[]) => {
   for (const eventName of eventNames) {
     socket.removeAllListeners(eventName)

@@ -1,7 +1,6 @@
 import CampaignModel from '#models/Campaign.js'
 
-import {getChannel} from '#utils/RabbitMQ.js'
-
+import {appErrorLog} from '#services/Log.js'
 import {sendTaskToQueue} from '#worker/WorkerWrapper.js'
 
 export async function getCampaigns(request, response) {
@@ -23,8 +22,6 @@ export async function getCampaigns(request, response) {
 export async function createCampaign(request, response) {
   try {
     const {name, message, recipients, scheduleTime} = request.body
-    // Publish task to RabbitMQ
-    const channel = getChannel()
     const queue = 'pending-queue-when-initiate'
     const task = {name, message, recipients, scheduleTime, createdBy: request.user.id}
 

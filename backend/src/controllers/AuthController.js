@@ -9,14 +9,20 @@ const JWT_SECRET = env.JWT_SECRET
 
 /**
  * Generate a JWT for a user.
- *
- * @param {Object} user - User object.
- * @param {string} user._id - User ID.
- * @param {string} user.role - User role.
+ * @param {import('#shared/types').RegisteredUser} user - User object.
  * @returns {string} JWT token.
  */
 
 function generateToken(user) {
+  return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1m'})
+}
+
+/**
+ * Generate a JWT for a user.
+ * @param {import('#shared/types').RegisteredUser} user - User object.
+ * @returns {string} JWT token.
+ */
+function generateRefreshToken(user) {
   return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1d'})
 }
 
@@ -59,6 +65,12 @@ export async function login(request, response) {
     }
 
     const token = generateToken(user)
+    const refreshToken = generateToken(user)
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true, // Prevent access by JavaScript
+      sameSite: 'strict', // Prevent CSRF attacks
+      maxAge: 1 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+    })
     response.status(200).json({message: 'Login successful', token})
   } catch (error) {
     appErrorLog({type: 'login', body: request.body, error: error.stack})

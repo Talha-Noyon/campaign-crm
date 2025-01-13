@@ -24,7 +24,7 @@ export async function verifyToken(request, response, next) {
     const decoded = jwt.verify(token, JWT_SECRET)
     request.user = await UserModel.findById(decoded.id).select('-password')
     next()
-  } catch (error) {
+  } catch {
     response.status(401).json({message: 'Invalid or expired token'})
   }
 }

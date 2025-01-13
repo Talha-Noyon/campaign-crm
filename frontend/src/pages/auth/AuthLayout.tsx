@@ -1,13 +1,14 @@
 import {Outlet} from 'react-router-dom'
 
+import {toAbsoluteUrl} from '@/utils/Common'
+
 export function AuthLayout() {
   return (
     <div className="md:tw-grid md:tw-min-h-screen md:tw-grid-cols-2">
       {/* Background Section */}
       <div
         style={{
-          backgroundImage:
-            'linear-gradient(135deg, #667eea 0%, #764ba2 100%), url(/media/auth/bg-pattern.svg)',
+          backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
@@ -21,9 +22,9 @@ export function AuthLayout() {
             Transforming the way you manage your business.
           </p>
           <img
-            src="/media/auth/marketing-amico.svg"
+            src={toAbsoluteUrl('/media/auth/marketing-amico.svg')}
             alt="Auth Illustration"
-            className="tw-mt-8 tw-w-3/4 lg:tw-w-2/3"
+            className="tw-w-3/4 lg:tw-w-2/3"
           />
         </div>
       </div>

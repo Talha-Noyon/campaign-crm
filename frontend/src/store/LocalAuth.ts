@@ -4,11 +4,9 @@ const AUTH_KEY = 'AUTH'
 
 export type AuthUser = {
   _id: string
-  user_type_id: number
-  user_email: string
+  email: string
   token: string
-  first_name: string
-  last_name: string
+  username: string
   role: string
 }
 

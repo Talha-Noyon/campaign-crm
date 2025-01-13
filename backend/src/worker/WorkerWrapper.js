@@ -1,12 +1,12 @@
 import {getChannel} from '#utils/RabbitMQ.js'
 
 export function sendTaskToQueue(queueName, task) {
+  const channel = getChannel()
   channel.sendToQueue(queueName, Buffer.from(JSON.stringify(task)), {
     persistent: true,
     headers: {retryCount: task.retryCount}
   })
 }
-
 /**
  * Generic worker wrapper for RabbitMQ tasks.
  * @param {string} queue - The name of the queue to consume from.

@@ -4,6 +4,9 @@ import {defineConfig} from 'vite'
 
 export default defineConfig({
   server: {
+    fs: {
+      allow: ['..'] // Allow access to parent directory (for shared folder)
+    },
     port: 3000
   },
   preview: {
@@ -14,7 +17,8 @@ export default defineConfig({
     alias: {
       '@/': resolve(__dirname, './src') + '/',
       '@/types': resolve(__dirname, '../types'),
-      '@/shared': resolve(__dirname, '../shared')
+      '@shared': resolve(__dirname, '../shared')
     }
   }
 })
+console.log('Resolved path for shared folder:', resolve(__dirname, '../shared'))

@@ -3,6 +3,21 @@ import {sleep} from '@/utils/Common'
 import {fetcher} from '@/api/fetcher'
 import {useStore} from '@/store'
 import {getLocalAuth} from '@/store/LocalAuth'
+import {api} from '@/utils/Axios'
+import {campaignTypes, type FetchReportArgs} from '@shared/types/types'
+
+export async function fetchReport({type, startDate, endDate}: FetchReportArgs) {
+  const {data: report} = await api.get<Report>(
+    `/api/dashboard-${type}/?datetimes=${startDate} - ${endDate}`
+  )
+
+  return {type, report}
+}
+
+export function fetchReports(args: Omit<FetchReportArgs, 'type'>) {
+  return Promise.all(campaignTypes.map((type) => fetchReport({type, ...args})))
+}
+
 type CompanyInfo = {
   _id: string
   form_active: boolean

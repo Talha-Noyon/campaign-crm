@@ -8,7 +8,7 @@
     "start": "node ./backend/src/index.js",
     "format": "prettier .",
     "format:fix": "prettier . --write",
-    "lint": "eslint --ext .js ./src",
-    "lint:fix": "eslint --ext .js ./src --fix"
+    "lint": "eslint --ext .js ./backend/src",
+    "lint:fix": "eslint --ext .js ./backend/src --fix"
   }
 }

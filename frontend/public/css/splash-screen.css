@@ -18,6 +18,8 @@ body {
 #splash-screen img {
   margin-left: calc(100vw - 100%);
   margin-bottom: 30px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
 }
 

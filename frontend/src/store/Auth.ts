@@ -30,9 +30,9 @@ export function useAuth() {
   const setAuth = useStore((state) => state.setAuth)
 
   async function login({email, password}: {email: string; password: string}) {
-    const {data} = await api.post<AuthUser>('/login', {
-      user_email: email,
-      user_pass: password
+    const {data} = await api.post<AuthUser>('/api/auth/login', {
+      email: email,
+      password
     })
 
     setAuth(data)
@@ -42,22 +42,18 @@ export function useAuth() {
 
   async function logout() {
     if (auth) {
-      const {data} = await api.post<{assignmentExists: boolean; msg: string}>(
-        '/update-logout-session',
-        {
-          user_id: auth._id,
-          user_login_session_id: auth.token
-        }
-      )
-      if (data?.assignmentExists) {
+      const {data} = await api.post<{success: boolean; msg: string}>('/api/auth/logout', {
+        token: auth.token
+      })
+      if (data?.success) {
         return {
-          status: 'FAILED',
-          data
+          status: 'SUCCESS'
         } as const
       } else {
         setAuth(null)
         return {
-          status: 'SUCCESS'
+          status: 'FAILED',
+          data
         } as const
       }
     }

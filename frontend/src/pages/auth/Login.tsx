@@ -23,7 +23,7 @@ const initialValues = {
 
 export function Login() {
   const navigate = useNavigate()
-  const [role, setRole] = useState('admin')
+  const [role, setRole] = useState('campaign_manager')
   const [loading, setLoading] = useState(false)
   const {login} = useAuth()
   const setAuth = useStore((state) => state.setAuth)
@@ -41,8 +41,7 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        const auth = await login(values)
-        localStorage.setItem('user-active-key', auth.token)
+        await login(values)
         const pathname = getAuthPathname()
         if (pathname) {
           navigate(pathname)
@@ -79,16 +78,6 @@ export function Login() {
             type="button"
             className={clsx(
               'tw-btn tw-rounded-l-lg tw-px-4 tw-py-2 tw-text-sm tw-font-semibold',
-              role === 'admin' ? 'tw-bg-blue-600 tw-text-white' : 'tw-bg-gray-200 tw-text-gray-700'
-            )}
-            onClick={() => handleRoleSwitch('admin')}
-          >
-            Admin
-          </button>
-          <button
-            type="button"
-            className={clsx(
-              'tw-btn tw-rounded-r-lg tw-px-4 tw-py-2 tw-text-sm tw-font-semibold',
               role === 'campaign_manager'
                 ? 'tw-bg-blue-600 tw-text-white'
                 : 'tw-bg-gray-200 tw-text-gray-700'
@@ -96,6 +85,16 @@ export function Login() {
             onClick={() => handleRoleSwitch('campaign_manager')}
           >
             Campaign Manager
+          </button>
+          <button
+            type="button"
+            className={clsx(
+              'tw-btn tw-rounded-r-lg tw-px-4 tw-py-2 tw-text-sm tw-font-semibold',
+              role === 'admin' ? 'tw-bg-blue-600 tw-text-white' : 'tw-bg-gray-200 tw-text-gray-700'
+            )}
+            onClick={() => handleRoleSwitch('admin')}
+          >
+            Admin
           </button>
         </div>
         <div>

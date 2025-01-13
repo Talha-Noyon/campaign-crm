@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
@@ -5,9 +6,9 @@ import morgan from 'morgan'
 import authRoutes from '#routes/http/AuthRoutes.js'
 import campaignRoutes from '#routes/http/CampaignRoutes.js'
 
-
 const app = express()
 // Middleware
+app.use(cookieParser())
 app.use(cors())
 app.use(morgan('dev'))
 app.use(express.urlencoded({extended: true, limit: '50mb'}))
