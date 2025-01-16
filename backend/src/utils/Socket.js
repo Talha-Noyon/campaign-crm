@@ -37,12 +37,12 @@ function onConnection(socket) {
     socket.join(`user_${decoded.id}`)
   })
 }
-setInterval(() => {
+/* setInterval(() => {
   console.log('emit', 'campaign-update')
-  /* socketIO
+  socketIO
     .in(`user_6783ec28d1abda6c136d8454`)
-    .emit('campaign-update', {campaignName: 'Subscription Renewal Reminder'}) */
-}, 3000)
+    .emit('campaign-initiate', {_id: '6789850384a9b5c46fd3308c'})
+}, 3000) */
 export function connectSocket() {
   socketIO.on('connection', onConnection)
 }

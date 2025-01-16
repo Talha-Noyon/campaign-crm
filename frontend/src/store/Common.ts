@@ -22,6 +22,7 @@ type Action = {
   addBellNotification: (newNotification: BellNotification) => void
   addCampaignMetrics: (campaignMetrics: CampaignMetrics[]) => void
   updateCampaignMetrics: (campaignMetrics: CampaignMetrics) => void
+  resetCampaignMetrics: (campaignMetrics: CampaignMetrics[]) => void
   resetAllState: () => void
 }
 
@@ -38,10 +39,15 @@ export const createCommonSlice: Slice<CommonSlice> = (set, get) => ({
       bellNotifications: [...currentNotifications, newNotification].slice(-15)
     })
   },
-  addCampaignMetrics(campaignMetrics: CampaignMetrics[]) {
-    const currentMetrics = get().campaignMetrics
+  addCampaignMetrics(currentMetrics: CampaignMetrics[]) {
+    const prevMetrics = get().campaignMetrics
     set({
-      campaignMetrics: [...currentMetrics, ...campaignMetrics]
+      campaignMetrics: [...prevMetrics, ...currentMetrics]
+    })
+  },
+  resetCampaignMetrics(currentMetrics: CampaignMetrics[]) {
+    set({
+      campaignMetrics: currentMetrics
     })
   },
   updateCampaignMetrics(campaignMetrics: CampaignMetrics) {

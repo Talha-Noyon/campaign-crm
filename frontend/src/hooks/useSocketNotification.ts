@@ -8,7 +8,7 @@ import {socket} from '@/utils/Socket'
 
 type ActionFunction = (() => Promise<CampaignMetrics[]>) | undefined
 export function useSocketNotification(actionFunction?: ActionFunction) {
-  const addCampaignMetrics = useStore((state) => state.addCampaignMetrics)
+  const resetCampaignMetrics = useStore((state) => state.resetCampaignMetrics)
   const updateCampaignMetrics = useStore((state) => state.updateCampaignMetrics)
   useEffect(() => {
     socket.on('campaign-update', (campaignMetric: CampaignMetrics) => {
@@ -16,17 +16,19 @@ export function useSocketNotification(actionFunction?: ActionFunction) {
     })
     if (actionFunction) {
       socket.on('campaign-initiate', () => {
-        actionFunction()
+        actionFunction().then((data: CampaignMetrics[]) => {
+          resetCampaignMetrics(data)
+        })
       })
       actionFunction().then((data: CampaignMetrics[]) => {
-        addCampaignMetrics(data)
+        resetCampaignMetrics(data)
       })
     }
 
     return () => {
       removeSocketListeners(socket, ['campaign-update', 'campaign-initiate'])
     }
-  }, [actionFunction, addCampaignMetrics, updateCampaignMetrics])
+  }, [actionFunction, resetCampaignMetrics, updateCampaignMetrics])
 
   const addBellNotification = useStore((state) => state.addBellNotification)
   useEffect(() => {
