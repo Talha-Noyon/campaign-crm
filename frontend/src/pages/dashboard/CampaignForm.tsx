@@ -1,4 +1,3 @@
-import {type CampaignDataParams} from '@shared/types'
 import Tagify, {type TagifyTagsReactProps} from '@yaireo/tagify/dist/react.tagify'
 import '@yaireo/tagify/dist/tagify.css'
 import {ErrorMessage, Field, Formik} from 'formik'

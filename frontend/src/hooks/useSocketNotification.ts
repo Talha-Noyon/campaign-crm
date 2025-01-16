@@ -20,7 +20,6 @@ export function useSocketNotification(actionFunction?: ActionFunction) {
       })
       actionFunction().then((data: CampaignMetrics[]) => {
         addCampaignMetrics(data)
-        console.log({data})
       })
     }
 
