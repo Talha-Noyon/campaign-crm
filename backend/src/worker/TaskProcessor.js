@@ -99,6 +99,12 @@ async function campaignTaskProcessing(task) {
       } else if (sendingStatus === 'failed') {
         task.failureCount++
       }
+      socketIO.in(`user_${task.createdBy}`).emit('campaign-update', {
+        _id: task._id,
+        campaignName: task.campaignName,
+        successCount: task.successCount,
+        failureCount: task.failureCount
+      })
       statusDetailsByRecipients[recipient] = {
         ...statusDetailsByRecipients[recipient],
         processEndTime: getTimestamp(),

@@ -1,7 +1,6 @@
 import {type CampaignDataParams, type CampaignModel} from '@shared/types/index'
 
 import {fetcher} from '@/api/fetcher'
-import {getLocalAuth} from '@/store/LocalAuth'
 
 // import {sleep} from '@/utils/Common'
 

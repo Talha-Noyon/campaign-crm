@@ -1,48 +1,20 @@
-import {type CampaignMetrics} from '@shared/types'
 import {Activity, CheckCircle, MinusCircle, PlusCircle, XCircle} from 'lucide-react'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import CampaignForm from '@/pages/dashboard/CampaignForm'
 
 import {getCampaign} from '@/api'
-
-import {removeSocketListeners} from '@/utils/Common'
-import {socket} from '@/utils/Socket'
+import {useSocketNotification} from '@/hooks/useSocketNotification'
+import {useStore} from '@/store'
 
 const Dashboard: React.FC = () => {
+  useSocketNotification(getCampaign)
   const [showCreateCampaign, setShowCreateCampaign] = useState(false)
-  const [metrics, setMetrics] = useState<CampaignMetrics[]>([])
+  const campaignMetrics = useStore((state) => state.campaignMetrics)
 
   const toggleCampaignForm = () => {
     setShowCreateCampaign((prev) => !prev)
   }
-
-  useEffect(() => {
-    // Listen for real-time campaign updates
-    socket.on('campaign-update', (updatedMetrics: CampaignMetrics) => {
-      console.log({updatedMetrics})
-
-      /* setMetrics((prevMetrics) => {
-        const index = prevMetrics.findIndex(
-          (metric) => metric.campaignName === updatedMetrics.campaignName
-        )
-        if (index !== -1) {
-          const newMetrics = [...prevMetrics]
-          newMetrics[index] = updatedMetrics
-          return newMetrics
-        } else {
-          return [...prevMetrics, updatedMetrics]
-        }
-      }) */
-    })
-    getCampaign().then((data) => {
-      setMetrics(data)
-      console.log({data})
-    })
-    return () => {
-      removeSocketListeners(socket, ['campaign-update'])
-    }
-  }, [])
 
   return (
     <div className="tw-min-h-screen tw-bg-gray-100 tw-p-6">
@@ -66,7 +38,7 @@ const Dashboard: React.FC = () => {
         <CampaignForm toggleCampaignForm={toggleCampaignForm} getCampaign={getCampaign} />
       )}
       <div className="tw-grid tw-grid-cols-1 tw-gap-6 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-        {metrics.map((metric, index) => {
+        {campaignMetrics.map((metric, index) => {
           const total = metric.successCount + metric.failureCount
           return (
             <div

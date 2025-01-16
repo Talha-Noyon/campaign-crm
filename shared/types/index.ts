@@ -41,3 +41,10 @@ export type BellNotification = {
   email: string
   sendingStatus: SendingStatus
 }
+export type AuthUser = {
+  _id: string
+  email: string
+  token: string
+  username: string
+  role: string
+}

@@ -8,25 +8,18 @@ import {Avatar} from '@/components/Avatar'
 import {BellIcon} from '@/components/Icons'
 
 import {usePopover} from '@/hooks/usePopover'
+import {useSocketNotification} from '@/hooks/useSocketNotification'
 import {useStore} from '@/store'
 import {useAuth} from '@/store/Auth'
 import {useLayout} from '@/store/Layout'
 
-import {removeSocketListeners, toAbsoluteUrl} from '@/utils/Common'
+import {toAbsoluteUrl} from '@/utils/Common'
 import {socket} from '@/utils/Socket'
 
 export function Navbar() {
   const isDesktopSidebarExpand = useLayout((state) => state.isDesktopSidebarExpand)
   const isDesktopSidebarHovered = useLayout((state) => state.isDesktopSidebarHovered)
-  const addBellNotification = useStore((state) => state.addBellNotification)
-  useEffect(() => {
-    socket.on('email-notification', (notification) => {
-      addBellNotification(notification)
-    })
-    return () => {
-      removeSocketListeners(socket, ['email-notification'])
-    }
-  }, [addBellNotification])
+  useSocketNotification()
   return (
     <div
       className={`${
@@ -139,8 +132,8 @@ function UserDetailsPopoverContent() {
   const bellNotifications = useStore((state) => state.bellNotifications)
   return (
     <div className="tw-divide-y">
-      {bellNotifications.map((item) => (
-        <ListItem left={item.email} right={`sent ${item.sendingStatus}`} />
+      {bellNotifications.map((item, index) => (
+        <ListItem key={index} left={item.email} right={`sent ${item.sendingStatus}`} />
       ))}
     </div>
   )

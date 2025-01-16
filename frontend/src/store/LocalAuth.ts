@@ -1,14 +1,8 @@
+import {type AuthUser} from '@shared/types'
+
 import {LocalJson} from '@/utils/LocalJSON'
 
 const AUTH_KEY = 'AUTH_KEY'
-
-export type AuthUser = {
-  _id: string
-  email: string
-  token: string
-  username: string
-  role: string
-}
 
 export const localAuth = new LocalJson<AuthUser>(AUTH_KEY)
 

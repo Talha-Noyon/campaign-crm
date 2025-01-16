@@ -1,16 +1,17 @@
-import {type BellNotification} from '@shared/types'
+import {type BellNotification, type CampaignMetrics} from '@shared/types'
 import {useEffect} from 'react'
 
 import {type Slice, useStore} from '@/store'
-import {userDefaultState} from '@/store/User'
 
 export type State = {
   socketStatus: boolean
+  campaignMetrics: CampaignMetrics[]
   bellNotifications: BellNotification[]
   isOnline: boolean
 }
 
 export const defaultState: State = {
+  campaignMetrics: [],
   bellNotifications: [{email: 'example@gmail.com', sendingStatus: 'success'}],
   socketStatus: false,
   isOnline: true
@@ -19,6 +20,8 @@ export const defaultState: State = {
 type Action = {
   setCommon: (status: Partial<State>) => void
   addBellNotification: (newNotification: BellNotification) => void
+  addCampaignMetrics: (campaignMetrics: CampaignMetrics[]) => void
+  updateCampaignMetrics: (campaignMetrics: CampaignMetrics) => void
   resetAllState: () => void
 }
 
@@ -35,10 +38,27 @@ export const createCommonSlice: Slice<CommonSlice> = (set, get) => ({
       bellNotifications: [...currentNotifications, newNotification].slice(-15)
     })
   },
+  addCampaignMetrics(campaignMetrics: CampaignMetrics[]) {
+    const currentMetrics = get().campaignMetrics
+    set({
+      campaignMetrics: [...currentMetrics, ...campaignMetrics]
+    })
+  },
+  updateCampaignMetrics(campaignMetrics: CampaignMetrics) {
+    const currentMetrics = get().campaignMetrics
+    for (const currentMetric of currentMetrics) {
+      if (currentMetric._id === campaignMetrics._id) {
+        currentMetric.failureCount = campaignMetrics.failureCount
+        currentMetric.successCount = campaignMetrics.successCount
+      }
+    }
+    set({
+      campaignMetrics: [...currentMetrics]
+    })
+  },
   resetAllState() {
     set({
-      ...defaultState,
-      ...userDefaultState
+      ...defaultState
     })
   }
 })
