@@ -21,9 +21,17 @@ export async function getCampaigns(request, response) {
  */
 export async function createCampaign(request, response) {
   try {
-    const {name, message, recipients, scheduleTime} = request.body
+    const {campaignName, messageContent, recipients, scheduleTime} = request.body
+    console.log(request.user)
+    console.log(request.body)
     const queue = 'pending-queue-when-initiate'
-    const task = {name, message, recipients, scheduleTime, createdBy: request.user.id}
+    const task = {
+      campaignName,
+      messageContent,
+      recipients,
+      scheduleTime,
+      createdBy: request.user._id
+    }
 
     sendTaskToQueue(queue, task)
 

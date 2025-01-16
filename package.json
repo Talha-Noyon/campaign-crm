@@ -10,5 +10,8 @@
     "format:fix": "prettier . --write",
     "lint": "eslint --ext .js ./backend/src",
     "lint:fix": "eslint --ext .js ./backend/src --fix"
+  },
+  "dependencies": {
+    "express-session": "^1.18.1"
   }
 }

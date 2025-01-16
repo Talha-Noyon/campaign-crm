@@ -15,11 +15,20 @@ export const StatusDetailsByRecipientsSchema = z.record(z.string(), StatusDetail
 
 export const TaskSchema = z.object({
   _id: z.string(),
-  name: z.string(),
-  message: z.string(),
+  campaignName: z.string(),
+  messageContent: z.string(),
   recipients: z.array(z.string().email()),
-  scheduleTime: z.string(),
-  createdBy: z.string(),
+  scheduleTime: z
+    .object({
+      start: z.string().refine((value) => !isNaN(Date.parse(value)), {
+        message: 'Invalid start date format'
+      }),
+      end: z.string().refine((value) => !isNaN(Date.parse(value)), {
+        message: 'Invalid end date format'
+      })
+    })
+    .required(),
+  createdBy: z.string().length(24, 'Invalid ObjectId for createdBy'),
   statusDetailsByRecipients: StatusDetailsByRecipientsSchema,
-  status: z.enum(['pending', 'processing', 'completed'])
+  status: z.enum(['pending', 'processing', 'completed']).default('pending')
 })

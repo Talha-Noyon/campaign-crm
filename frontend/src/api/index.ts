@@ -1,51 +1,14 @@
-import {useMutation, useQuery} from '@tanstack/react-query'
-import {sleep} from '@/utils/Common'
+import {type CampaignDataParams, type CampaignModel} from '@shared/types/index'
+
 import {fetcher} from '@/api/fetcher'
-import {useStore} from '@/store'
 import {getLocalAuth} from '@/store/LocalAuth'
-import {api} from '@/utils/Axios'
-import {campaignTypes, type FetchReportArgs} from '@shared/types/index'
 
-export async function fetchReport({type, startDate, endDate}: FetchReportArgs) {
-  const {data: report} = await api.get<Report>(
-    `/api/dashboard-${type}/?datetimes=${startDate} - ${endDate}`
-  )
+// import {sleep} from '@/utils/Common'
 
-  return {type, report}
-}
-
-export function fetchReports(args: Omit<FetchReportArgs, 'type'>) {
-  return Promise.all(campaignTypes.map((type) => fetchReport({type, ...args})))
-}
-
-type CompanyInfo = {
-  _id: string
-  form_active: boolean
-  transfer_enabled: boolean
-  form_mandatory: boolean
-}
-// company
-export function useCompany() {
-  return useQuery({
-    queryKey: ['company'],
-    queryFn: getCompany
-  })
-}
-
-function getCompany() {
-  return fetcher<CompanyInfo>('/get-company-info')
-}
-
-export function useSignOut() {
-  const setAuth = useStore((state) => state.setAuth)
-
-  return useMutation({
-    mutationFn: signOut,
-    async onSuccess() {
-      setAuth(null)
-      await sleep(1000)
-      window.location.reload()
-    }
+export async function createCampaign(campaignDataParams: CampaignDataParams) {
+  return await fetcher<CampaignModel>('/api/campaigns', {
+    method: 'POST',
+    json: campaignDataParams
   })
 }
 

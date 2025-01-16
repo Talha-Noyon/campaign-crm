@@ -54,7 +54,7 @@ export function DatePicker({value, onChange, showClear = false}: Props) {
       granularity="minute"
       value={value}
       onChange={handleChnage}
-      className="tw-w-full"
+      className="tw-mb-1 tw-w-full"
     >
       <Group className="tw-relative tw-overflow-hidden tw-rounded tw-border tw-border-solid tw-border-secondary-200 tw-bg-white tw-pr-10">
         <div className="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-2.5">

@@ -1,3 +1,4 @@
+import {type RegisteredUser} from '@shared/types/index'
 import {enqueueSnackbar} from 'notistack'
 import {useEffect} from 'react'
 
@@ -5,8 +6,6 @@ import {type Slice, useStore} from '@/store'
 import {useAuth} from '@/store/Auth'
 
 import {socket} from '@/utils/Socket'
-
-import {type RegisteredUser} from '@/shared/types'
 
 type State = {
   user: RegisteredUser | null

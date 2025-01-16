@@ -20,11 +20,12 @@ export async function verifyToken(request, response, next) {
     if (!token) {
       return response.status(403).json({message: 'Access denied, no token provided'})
     }
-
+    console.log({token}, {JWT_SECRET})
     const decoded = jwt.verify(token, JWT_SECRET)
     request.user = await UserModel.findById(decoded.id).select('-password')
     next()
-  } catch {
+  } catch (e) {
+    console.log(e)
     response.status(401).json({message: 'Invalid or expired token'})
   }
 }

@@ -3,20 +3,19 @@ import mongoose from 'mongoose'
 const StatusDetailsSchema = new mongoose.Schema(
   {
     processStartTime: {type: Number, required: true},
-    processingTime: {type: Number, required: true},
-    processEndTime: {type: Number, required: true}
+    processingTime: {type: Number},
+    processEndTime: {type: Number}
   },
   {_id: false}
 )
 const campaignSchema = new mongoose.Schema(
   {
-    name: {type: String, required: true},
-    message: {type: String, required: true},
+    campaignName: {type: String, required: true},
+    messageContent: {type: String, required: true},
     recipients: [{type: String, required: true}],
-    scheduleTime: {type: Number, required: true},
+    scheduleTime: {type: {start: String, end: String}, required: true},
     statusDetailsByRecipients: {
-      type: Map,
-      of: StatusDetailsSchema,
+      type: Object,
       required: true
     },
     status: {

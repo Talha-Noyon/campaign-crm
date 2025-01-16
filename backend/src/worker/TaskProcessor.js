@@ -45,8 +45,8 @@ async function campaignTaskInitiate(task) {
 
     // Initiate task data to the database as a pending status
     const campaign = new CampaignModel({
-      name: task.name,
-      message: task.message,
+      campaignName: task.campaignName,
+      messageContent: task.messageContent,
       recipients: task.recipients,
       scheduleTime: task.scheduleTime,
       createdBy: task.createdBy,
@@ -92,9 +92,7 @@ async function campaignTaskProcessing(task) {
         sendingStatus
       }
     }
-    // Convert Map to Record
-    const recordStatusDetails = Object.fromEntries(statusDetailsByRecipients)
-    await changeCampaignStatus(task, recordStatusDetails)
+    await changeCampaignStatus(task, statusDetailsByRecipients)
   } catch (error) {
     console.log(error)
     appErrorLog({type: 'campaignTaskProcessing', task, error: error.stack})

@@ -14,7 +14,7 @@ const JWT_SECRET = env.JWT_SECRET
  */
 
 function generateToken(user) {
-  return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1m'})
+  return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1d'})
 }
 
 /**
@@ -23,7 +23,7 @@ function generateToken(user) {
  * @returns {string} JWT token.
  */
 function generateRefreshToken(user) {
-  return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1d'})
+  return jwt.sign({id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '2d'})
 }
 
 /**
@@ -65,12 +65,8 @@ export async function login(request, response) {
     }
 
     const token = generateToken(user)
-    const refreshToken = generateToken(user)
-    response.cookie('refreshToken', refreshToken, {
-      httpOnly: true, // Prevent access by JavaScript
-      sameSite: 'strict', // Prevent CSRF attacks
-      maxAge: 1 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
-    })
+    const refreshToken = generateRefreshToken(user)
+    request.session.refreshToken = refreshToken
     response.status(200).json({message: 'Login successful', token})
   } catch (error) {
     appErrorLog({type: 'login', body: request.body, error: error.stack})
