@@ -1,23 +1,32 @@
 import {FloatingArrow} from '@floating-ui/react'
 import {ChevronRightIcon} from 'lucide-react'
 import {enqueueSnackbar} from 'notistack'
-import {type ReactNode} from 'react'
+import {type ReactNode, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 
+import {Avatar} from '@/components/Avatar'
 import {BellIcon} from '@/components/Icons'
 
 import {usePopover} from '@/hooks/usePopover'
 import {useStore} from '@/store'
 import {useAuth} from '@/store/Auth'
 import {useLayout} from '@/store/Layout'
-import {useLoadUser} from '@/store/User'
 
+import {removeSocketListeners, toAbsoluteUrl} from '@/utils/Common'
 import {socket} from '@/utils/Socket'
 
 export function Navbar() {
-  useLoadUser()
   const isDesktopSidebarExpand = useLayout((state) => state.isDesktopSidebarExpand)
   const isDesktopSidebarHovered = useLayout((state) => state.isDesktopSidebarHovered)
+  const addBellNotification = useStore((state) => state.addBellNotification)
+  useEffect(() => {
+    socket.on('email-notification', (notification) => {
+      addBellNotification(notification)
+    })
+    return () => {
+      removeSocketListeners(socket, ['email-notification'])
+    }
+  }, [addBellNotification])
   return (
     <div
       className={`${
@@ -51,14 +60,8 @@ function AuthBreakPopover({onClick}: {icon?: ReactNode; onClick?: () => void}) {
           open ? 'tw-bg-secondary-100' : 'tw-bg-secondary-50'
         } tw-flex tw-items-center tw-rounded-full tw-border-none tw-p-0 tw-pl-4`}
       >
-        <span className="tw-whitespace-nowrap">
-          {auth?.first_name} {auth?.last_name}
-        </span>
-        <img
-          src="/media/users/defaultProfile.jpg"
-          alt="Avatar"
-          className="tw-ml-3 tw-block tw-w-12 tw-shrink-0 tw-rounded-full"
-        />
+        <span className="tw-whitespace-nowrap">{auth?.username}</span>
+        <Avatar src="/media/users/defaultProfile.jpg" alt="Avatar" size="md" />
       </button>
       {open && (
         <div
@@ -84,6 +87,7 @@ function AuthBreakPopover({onClick}: {icon?: ReactNode; onClick?: () => void}) {
 }
 
 function UserDetailsPopover({onClick}: {icon?: ReactNode; onClick?: () => void}) {
+  const bellNotifications = useStore((state) => state.bellNotifications)
   const {context, open, refs, floatingStyles, getReferenceProps, getFloatingProps} = usePopover({
     placement: 'bottom-end'
   })
@@ -97,7 +101,7 @@ function UserDetailsPopover({onClick}: {icon?: ReactNode; onClick?: () => void})
           open ? 'tw-bg-secondary-100' : 'tw-bg-secondary-50'
         } tw-inline-flex tw-size-12 tw-items-center tw-justify-center tw-rounded-full tw-border-none tw-p-0`}
       >
-        <BellIcon className="tw-block tw-size-8" counter="434" />
+        <BellIcon className="tw-block tw-size-8" counter={String(bellNotifications.length)} />
       </button>
       {open && (
         <div
@@ -132,13 +136,12 @@ function ListItem({left, right}: {left: string; right: ReactNode}) {
 }
 
 function UserDetailsPopoverContent() {
-  const user = useStore((state) => state.user)
+  const bellNotifications = useStore((state) => state.bellNotifications)
   return (
     <div className="tw-divide-y">
-      <ListItem left="Name" right={`${user?.firstName} ${user?.lastName}`} />
-      <ListItem left="Email" right={user?.email} />
-      <ListItem left="Phone" right={user?.mobile} />
-      <ListItem left="Status" right="Active" />
+      {bellNotifications.map((item) => (
+        <ListItem left={item.email} right={`sent ${item.sendingStatus}`} />
+      ))}
     </div>
   )
 }
@@ -154,14 +157,10 @@ function AuthBreakPopoverContent() {
       try {
         const response = await logout()
         if (response?.status === 'FAILED') {
-          enqueueSnackbar(response.data.msg, {variant: 'info'})
+          enqueueSnackbar(response.data.message, {variant: 'info'})
         } else {
           resetAllState()
           socket.disconnect()
-          btnEl.disabled = false
-          setTimeout(() => {
-            window.location.reload()
-          }, 3000) // 3 seconds
         }
       } catch {
         btnEl.disabled = false
@@ -175,15 +174,11 @@ function AuthBreakPopoverContent() {
   return (
     <div className="tw-p-3">
       <Link
-        to="/profile"
+        to="/dashboard"
         className="tw-flex tw-items-center tw-gap-3 tw-rounded-lg tw-bg-secondary-50 tw-p-3 hover:tw-bg-secondary-100"
       >
         <div>
-          <img
-            src="/media/users/defaultProfile.jpg"
-            alt="Avatar"
-            className="tw-block tw-w-12 tw-rounded-full"
-          />
+          <Avatar src={toAbsoluteUrl(`/media/users/defaultProfile.jpg`)} alt="Avatar" size="sm" />
         </div>
         <div className="tw-grow">
           <h3 className="tw-m-0 tw-text-lg">{auth?.username}</h3>

@@ -5,7 +5,6 @@ import {AuthPage} from '@/pages/auth/AuthPage'
 import {Logout} from '@/pages/auth/Logout'
 import {PrivateRoutes} from '@/routing/PrivateRoutes'
 
-import {useHandleInvalidSession} from '@/hooks/useHandleInvalidSession'
 import {useHideSplashScreen} from '@/hooks/useHideSplashScreen'
 import {useInitSocketStatus} from '@/hooks/useInitSocketStatus'
 import {useReloadOnStorageChange} from '@/hooks/useReloadOnStorageChange'
@@ -44,8 +43,6 @@ function Init() {
   useHideSplashScreen()
   useReloadOnStorageChange()
   useInitSocketStatus()
-  useHandleInvalidSession()
-
   return null
 }
 

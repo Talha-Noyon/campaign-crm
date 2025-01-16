@@ -11,13 +11,14 @@ export type State = {
 }
 
 export const defaultState: State = {
-  bellNotifications: [],
+  bellNotifications: [{email: 'example@gmail.com', sendingStatus: 'success'}],
   socketStatus: false,
   isOnline: true
 }
 
 type Action = {
   setCommon: (status: Partial<State>) => void
+  addBellNotification: (newNotification: BellNotification) => void
   resetAllState: () => void
 }
 
@@ -28,7 +29,12 @@ export const createCommonSlice: Slice<CommonSlice> = (set, get) => ({
   setCommon(common) {
     set(common)
   },
-
+  addBellNotification(newNotification: BellNotification) {
+    const currentNotifications = get().bellNotifications
+    set({
+      bellNotifications: [...currentNotifications, newNotification].slice(-15)
+    })
+  },
   resetAllState() {
     set({
       ...defaultState,

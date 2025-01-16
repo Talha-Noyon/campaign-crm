@@ -1,6 +1,7 @@
 import CampaignModel from '#models/Campaign.js'
 
 import {getTimestamp} from '#utils/Helper.js'
+import {socketIO} from '#utils/Socket.js'
 
 import {sendCampaignEmails} from '#services/EmailService.js'
 import {appErrorLog} from '#services/Log.js'
@@ -88,8 +89,11 @@ async function campaignTaskProcessing(task) {
         ...statusDetailsByRecipients[recipient],
         processingTime: getTimestamp()
       }
-      // need socket notification here
+
       const {sendingStatus} = await sendCampaignEmails(recipient)
+      socketIO
+        .in(`user_${task.createdBy}`)
+        .emit('email-notification', {email: recipient, sendingStatus})
       if (sendingStatus === 'success') {
         task.successCount++
       } else if (sendingStatus === 'failed') {
