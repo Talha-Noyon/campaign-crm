@@ -1,64 +1,17 @@
-import {Activity, CheckCircle, MinusCircle, PieChart, PlusCircle, XCircle} from 'lucide-react'
+import {type CampaignMetrics} from '@shared/types'
+import {Activity, CheckCircle, MinusCircle, PlusCircle, XCircle} from 'lucide-react'
 import {useEffect, useState} from 'react'
 
 import CampaignForm from '@/pages/dashboard/CampaignForm'
 
-import {socket} from '@/utils/Socket'
+import {getCampaign} from '@/api'
 
-interface CampaignMetrics {
-  campaignName: string
-  total: number
-  success: number
-  failures: number
-  openRate: number // percentage
-}
+import {removeSocketListeners} from '@/utils/Common'
+import {socket} from '@/utils/Socket'
 
 const Dashboard: React.FC = () => {
   const [showCreateCampaign, setShowCreateCampaign] = useState(false)
-  const [metrics, setMetrics] = useState<CampaignMetrics[]>([
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    },
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    },
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    },
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    },
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    },
-    {
-      campaignName: 'Getting Request',
-      total: 12,
-      success: 6,
-      failures: 4,
-      openRate: 6
-    }
-  ])
+  const [metrics, setMetrics] = useState<CampaignMetrics[]>([])
 
   const toggleCampaignForm = () => {
     setShowCreateCampaign((prev) => !prev)
@@ -67,7 +20,9 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // Listen for real-time campaign updates
     socket.on('campaign-update', (updatedMetrics: CampaignMetrics) => {
-      setMetrics((prevMetrics) => {
+      console.log({updatedMetrics})
+
+      /* setMetrics((prevMetrics) => {
         const index = prevMetrics.findIndex(
           (metric) => metric.campaignName === updatedMetrics.campaignName
         )
@@ -78,8 +33,15 @@ const Dashboard: React.FC = () => {
         } else {
           return [...prevMetrics, updatedMetrics]
         }
-      })
+      }) */
     })
+    getCampaign().then((data) => {
+      setMetrics(data)
+      console.log({data})
+    })
+    return () => {
+      removeSocketListeners(socket, ['campaign-update'])
+    }
   }, [])
 
   return (
@@ -90,7 +52,7 @@ const Dashboard: React.FC = () => {
         </h1>
         <button
           onClick={toggleCampaignForm}
-          className="tw-flex tw-items-center tw-rounded-lg tw-bg-blue-500 tw-px-4 tw-py-2 tw-text-white tw-shadow-md tw-transition hover:tw-bg-blue-600"
+          className="tw-btn tw-flex tw-items-center tw-rounded-lg tw-bg-blue-500 tw-px-4 tw-py-2 tw-text-white tw-shadow-md tw-transition hover:tw-bg-blue-600"
         >
           {showCreateCampaign ? (
             <MinusCircle className="tw-mr-2" />
@@ -100,59 +62,58 @@ const Dashboard: React.FC = () => {
           Create Campaign
         </button>
       </div>
-      {showCreateCampaign && <CampaignForm toggleCampaignForm={toggleCampaignForm} />}
+      {showCreateCampaign && (
+        <CampaignForm toggleCampaignForm={toggleCampaignForm} getCampaign={getCampaign} />
+      )}
       <div className="tw-grid tw-grid-cols-1 tw-gap-6 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-        {metrics.map((metric, index) => (
-          <div
-            key={index}
-            className="tw-hover:shadow-xl tw-hover:-translate-y-1 tw-transform tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white tw-p-6 tw-shadow-lg tw-transition tw-duration-300"
-          >
-            <h2 className="tw-mb-4 tw-flex tw-items-center tw-space-x-2 tw-text-xl tw-font-semibold tw-text-gray-700">
-              <Activity className="tw-text-blue-500" />
-              <span>{metric.campaignName}</span>
-            </h2>
-            <div className="tw-space-y-2 tw-text-sm tw-text-gray-600">
-              <p className="tw-flex tw-items-center tw-space-x-2">
-                <CheckCircle className="tw-text-green-500" />
-                <span>
-                  Success: <strong className="tw-text-gray-800">{metric.success}</strong>
-                </span>
-              </p>
-              <p className="tw-flex tw-items-center tw-space-x-2">
-                <XCircle className="tw-text-red-500" />
-                <span>
-                  Failures: <strong className="tw-text-gray-800">{metric.failures}</strong>
-                </span>
-              </p>
-              <p className="tw-flex tw-items-center tw-space-x-2">
-                <PieChart className="tw-text-purple-500" />
-                <span>
-                  Open Rate: <strong className="tw-text-gray-800">{metric.openRate}%</strong>
-                </span>
-              </p>
-              <p>
-                Total: <strong className="tw-text-gray-800">{metric.total}</strong>
-              </p>
-            </div>
-            <div className="tw-mt-4">
-              <div className="tw-relative tw-h-2 tw-rounded-full tw-bg-gray-300">
-                <div
-                  className="tw-absolute tw-left-0 tw-top-0 tw-h-full tw-rounded-full tw-bg-green-500"
-                  style={{
-                    width: `${(metric.success / metric.total) * 100 || 0}%`
-                  }}
-                ></div>
-                <div
-                  className="tw-absolute tw-top-0 tw-h-full tw-rounded-full tw-bg-red-500"
-                  style={{
-                    left: `${(metric.success / metric.total) * 100 || 0}%`,
-                    width: `${(metric.failures / metric.total) * 100 || 0}%`
-                  }}
-                ></div>
+        {metrics.map((metric, index) => {
+          const total = metric.successCount + metric.failureCount
+          return (
+            <div
+              key={index}
+              className="tw-hover:shadow-xl tw-hover:-translate-y-1 tw-transform tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white tw-p-6 tw-shadow-lg tw-transition tw-duration-300"
+            >
+              <h2 className="tw-mb-4 tw-flex tw-items-center tw-space-x-2 tw-text-xl tw-font-semibold tw-text-gray-700">
+                <Activity className="tw-text-blue-500" />
+                <span>{metric.campaignName}</span>
+              </h2>
+              <div className="tw-space-y-2 tw-text-sm tw-text-gray-600">
+                <p className="tw-flex tw-items-center tw-space-x-2">
+                  <CheckCircle className="tw-text-green-500" />
+                  <span>
+                    Success: <strong className="tw-text-gray-800">{metric.successCount}</strong>
+                  </span>
+                </p>
+                <p className="tw-flex tw-items-center tw-space-x-2">
+                  <XCircle className="tw-text-red-500" />
+                  <span>
+                    Failures: <strong className="tw-text-gray-800">{metric.failureCount}</strong>
+                  </span>
+                </p>
+                <p>
+                  Total: <strong className="tw-text-gray-800">{total}</strong>
+                </p>
+              </div>
+              <div className="tw-mt-4">
+                <div className="tw-relative tw-h-2 tw-rounded-full tw-bg-gray-300">
+                  <div
+                    className="tw-absolute tw-left-0 tw-top-0 tw-h-full tw-rounded-full tw-bg-green-500"
+                    style={{
+                      width: `${(metric.successCount / total) * 100 || 0}%`
+                    }}
+                  ></div>
+                  <div
+                    className="tw-absolute tw-top-0 tw-h-full tw-rounded-full tw-bg-red-500"
+                    style={{
+                      left: `${(metric.successCount / total) * 100 || 0}%`,
+                      width: `${(metric.failureCount / total) * 100 || 0}%`
+                    }}
+                  ></div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

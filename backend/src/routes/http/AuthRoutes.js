@@ -1,7 +1,8 @@
 import express from 'express'
 
-import {login, register} from '#controllers/AuthController.js'
+import {login, logout, register} from '#controllers/AuthController.js'
 
+import {verifyToken} from '#middleware/AuthMiddleware.js'
 import {zodValidator} from '#middleware/ZodMiddleware.js'
 import {loginSchema, registerSchema} from '#shared/schemas/UserSchema.js'
 
@@ -32,5 +33,14 @@ router.post('/register', zodValidator(registerSchema), register)
  */
 
 router.post('/login', zodValidator(loginSchema), login)
+
+/**
+ * POST /auth/logout
+ * Logout user.
+ * @returns {Object} 200 - User successfully logged in with a token.
+ * @returns {Object} 401 - Invalid email or password.
+ */
+
+router.post('/logout', verifyToken, logout)
 
 export default router

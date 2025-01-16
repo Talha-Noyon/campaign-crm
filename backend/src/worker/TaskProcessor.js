@@ -8,7 +8,7 @@ import {createWorker, sendTaskToQueue} from '#worker/WorkerWrapper.js'
 
 /**
  * Mark as completed a campaign task.
- * @param {import('#shared/types/types').Task} task - The task data from the RabbitMQ message.
+ * @param {import('#shared/types/index').Task} task - The task data from the RabbitMQ message.
  * @param {import('#shared/types/index').StatusDetailsByRecipients} statusDetailsByRecipients - The task recipients email.
  */
 async function changeCampaignStatus(task, statusDetailsByRecipients) {
@@ -17,6 +17,8 @@ async function changeCampaignStatus(task, statusDetailsByRecipients) {
       {_id: task._id},
       {
         $set: {
+          successCount: task.successCount,
+          failureCount: task.failureCount,
           statusDetailsByRecipients,
           status: 'completed'
         }
@@ -69,6 +71,8 @@ async function campaignTaskInitiate(task) {
  */
 async function campaignTaskProcessing(task) {
   try {
+    task.successCount = 0
+    task.failureCount = 0
     // need socket notification here
     const {statusDetailsByRecipients} = await CampaignModel.findOneAndUpdate(
       {_id: task._id},
@@ -86,6 +90,11 @@ async function campaignTaskProcessing(task) {
       }
       // need socket notification here
       const {sendingStatus} = await sendCampaignEmails(recipient)
+      if (sendingStatus === 'success') {
+        task.successCount++
+      } else if (sendingStatus === 'failed') {
+        task.failureCount++
+      }
       statusDetailsByRecipients[recipient] = {
         ...statusDetailsByRecipients[recipient],
         processEndTime: getTimestamp(),

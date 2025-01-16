@@ -17,9 +17,15 @@ export type CampaignDataParams = {
   messageContent: string
   recipients: string[]
   scheduleTime: ScheduleTime
-  category: Category
+  category?: Category
 }
-
+export type CampaignMetrics = {
+  _id: string
+  campaignName: string
+  total?: number
+  successCount: number
+  failureCount: number
+}
 export type ScheduleTime = {
   start: string
   end: string
@@ -28,4 +34,10 @@ export type ScheduleTime = {
 export type Category = {
   value: string
   label: string
+}
+
+type SendingStatus = 'success' | 'failed'
+export type BellNotification = {
+  email: string
+  sendingStatus: SendingStatus
 }

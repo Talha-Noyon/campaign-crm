@@ -9,6 +9,8 @@ import {getAuthPathname} from '@/hooks/useSyncAuthPathname'
 import {useStore} from '@/store'
 import {useAuth} from '@/store/Auth'
 
+import {socket} from '@/utils/Socket'
+
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Please enter a valid email').required('Email is required'),
   password: Yup.string()
@@ -41,7 +43,8 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        await login(values)
+        const {token} = await login(values)
+        socket.emit('set-user-room', {token})
         const pathname = getAuthPathname()
         if (pathname) {
           navigate(pathname)

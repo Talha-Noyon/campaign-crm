@@ -3,9 +3,18 @@ import CampaignModel from '#models/Campaign.js'
 import {appErrorLog} from '#services/Log.js'
 import {sendTaskToQueue} from '#worker/WorkerWrapper.js'
 
+/**
+ * Create a new campaign task and queue it for processing.
+ *
+ * @param {import('express').Request} request - Express request object.
+ * @param {import('express').Response} response - Express response object.
+ */
 export async function getCampaigns(request, response) {
   try {
-    const campaigns = await CampaignModel.find({createdBy: request.user.id})
+    const campaigns = await CampaignModel.find(
+      {createdBy: request.user.id},
+      {_id: 1, campaignName: 1, messageContent: 1, successCount: 1, failureCount: 1}
+    ).sort({_id: -1})
     response.status(200).json(campaigns)
   } catch (error) {
     appErrorLog({type: 'getCampaigns', body: request.body, error: error.stack})

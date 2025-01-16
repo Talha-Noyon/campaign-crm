@@ -1,4 +1,4 @@
-import {BarChart4Icon, SendIcon} from 'lucide-react'
+import {BarChart4Icon} from 'lucide-react'
 import {type ReactNode} from 'react'
 
 import {useAuth} from '@/store/Auth'
@@ -16,11 +16,6 @@ const sidebarItems: SidebarItem[] = [
     title: 'Dashboard',
     link: '/dashboard',
     icon: <BarChart4Icon className="tw-size-5" />
-  },
-  {
-    title: 'Campaign',
-    link: '/get-campaign',
-    icon: <SendIcon className="tw-size-5" />
   }
 ]
 

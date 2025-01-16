@@ -19,9 +19,7 @@ export default function ProfilePage() {
               <img alt="Pic" src={toAbsoluteUrl('/media/users/defaultProfile.jpg')} />
             </div>
           </div>
-          <h2 className="fs-2 fw-bolder mb-0 tw-text-secondary-800">
-            {user.firstName} {user.lastName}
-          </h2>
+          <h2 className="fs-2 fw-bolder mb-0 tw-text-secondary-800">{JSON.stringify(user)}</h2>
           <div className="fw-bold mb-6 mt-1 tw-text-secondary-400">{user.type}</div>
         </div>
         <div className="card mb-5 mb-xl-10 mw-950px mx-auto">

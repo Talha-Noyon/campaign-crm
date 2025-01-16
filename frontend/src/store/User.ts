@@ -11,7 +11,7 @@ type State = {
   user: RegisteredUser | null
 }
 
-export const defaultState: State = {
+export const userDefaultState: State = {
   user: null
 }
 
@@ -23,7 +23,7 @@ type Action = {
 export type UserSlice = State & Action
 
 export const createUserSlice: Slice<UserSlice> = (set, get) => ({
-  ...defaultState,
+  ...userDefaultState,
   setUser(user) {
     set({user})
   },

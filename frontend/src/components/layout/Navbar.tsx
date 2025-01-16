@@ -186,10 +186,8 @@ function AuthBreakPopoverContent() {
           />
         </div>
         <div className="tw-grow">
-          <h3 className="tw-m-0 tw-text-lg">
-            {auth?.first_name} {auth?.last_name}
-          </h3>
-          <p className="tw-m-0 tw-text-secondary-500">{auth?.user_email}</p>
+          <h3 className="tw-m-0 tw-text-lg">{auth?.username}</h3>
+          <p className="tw-m-0 tw-text-secondary-500">{auth?.email}</p>
         </div>
         <ChevronRightIcon className="tw-size-5 tw-text-secondary-400" />
       </Link>

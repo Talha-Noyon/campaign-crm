@@ -67,9 +67,10 @@ const categoryOptions = [
 
 type Props = {
   toggleCampaignForm: () => void
+  getCampaign: () => void
 }
 
-const CampaignForm: React.FC<Props> = ({toggleCampaignForm}) => {
+const CampaignForm: React.FC<Props> = ({toggleCampaignForm, getCampaign}) => {
   const {start, end} = getTodayRangeValue()
   return (
     <div className="tw-mb-6 tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white tw-p-6 tw-shadow-lg">
@@ -79,21 +80,15 @@ const CampaignForm: React.FC<Props> = ({toggleCampaignForm}) => {
           campaignName: '',
           messageContent: '',
           recipients: [],
-          scheduleTime: {start: start.toString(), end: end.toString()},
-          category: null
+          scheduleTime: {start: start.toString(), end: end.toString()}
         }}
         validationSchema={campaignSchema}
         onSubmit={async (values, {resetForm}) => {
           console.log('Campaign Data Submitted: ', values)
-          const requestData = {
-            campaignName: values.campaignName,
-            messageContent: values.messageContent,
-            recipients: values.recipients,
-            scheduleTime: values.scheduleTime
-          }
           const response = await createCampaign(values)
           console.log({response})
           toggleCampaignForm()
+          getCampaign()
           resetForm()
         }}
       >

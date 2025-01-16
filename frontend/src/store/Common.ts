@@ -1,16 +1,17 @@
+import {type BellNotification} from '@shared/types'
 import {useEffect} from 'react'
 
 import {type Slice, useStore} from '@/store'
-import {defaultState as userDefaultState} from '@/store/User'
+import {userDefaultState} from '@/store/User'
 
 export type State = {
   socketStatus: boolean
-  connectionTime: number
+  bellNotifications: BellNotification[]
   isOnline: boolean
 }
 
 export const defaultState: State = {
-  connectionTime: Date.now(),
+  bellNotifications: [],
   socketStatus: false,
   isOnline: true
 }

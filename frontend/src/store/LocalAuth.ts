@@ -1,6 +1,6 @@
 import {LocalJson} from '@/utils/LocalJSON'
 
-const AUTH_KEY = 'AUTH'
+const AUTH_KEY = 'AUTH_KEY'
 
 export type AuthUser = {
   _id: string

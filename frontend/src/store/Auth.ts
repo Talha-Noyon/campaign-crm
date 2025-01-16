@@ -42,7 +42,7 @@ export function useAuth() {
 
   async function logout() {
     if (auth) {
-      const {data} = await api.post<{success: boolean; msg: string}>('/api/auth/logout', {
+      const {data} = await api.post<{success: boolean; message: string}>('/api/auth/logout', {
         token: auth.token
       })
       if (data?.success) {

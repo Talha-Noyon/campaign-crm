@@ -67,7 +67,26 @@ export async function login(request, response) {
     const token = generateToken(user)
     const refreshToken = generateRefreshToken(user)
     request.session.refreshToken = refreshToken
-    response.status(200).json({message: 'Login successful', token})
+    response
+      .status(200)
+      .json({username: user.username, email: user.email, message: 'Login successful', token})
+  } catch (error) {
+    appErrorLog({type: 'login', body: request.body, error: error.stack})
+    response.status(500).json({error: error.message})
+  }
+}
+
+/**
+ * Logout user.
+ *
+ * @param {import('express').Request} request - Express request object.
+ * @param {import('express').Response} response - Express response object.
+ */
+
+export async function logout(request, response) {
+  try {
+    const {username, email} = request.user
+    response.status(200).json({username, email, message: 'Logout successful'})
   } catch (error) {
     appErrorLog({type: 'login', body: request.body, error: error.stack})
     response.status(500).json({error: error.message})

@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const StatusDetailsSchema = new mongoose.Schema(
   {
-    processStartTime: {type: Number, required: true},
+    processStartTime: {type: Number},
     processingTime: {type: Number},
     processEndTime: {type: Number}
   },
@@ -14,6 +14,8 @@ const campaignSchema = new mongoose.Schema(
     messageContent: {type: String, required: true},
     recipients: [{type: String, required: true}],
     scheduleTime: {type: {start: String, end: String}, required: true},
+    successCount: {type: Number, default: 0},
+    failureCount: {type: Number, default: 0},
     statusDetailsByRecipients: {
       type: Object,
       required: true

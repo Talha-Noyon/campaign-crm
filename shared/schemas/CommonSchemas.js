@@ -17,6 +17,8 @@ export const TaskSchema = z.object({
   _id: z.string(),
   campaignName: z.string(),
   messageContent: z.string(),
+  successCount: z.number().default(0),
+  failureCount: z.number().default(0),
   recipients: z.array(z.string().email()),
   scheduleTime: z
     .object({
