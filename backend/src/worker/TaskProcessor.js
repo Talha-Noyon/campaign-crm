@@ -59,7 +59,9 @@ async function campaignTaskInitiate(task) {
     const savedData = await campaign.save()
     task._id = savedData._id.toString()
     sendTaskToQueue(processingQueueName, task)
-    // need socket notification here
+    socketIO.in(`user_${task.createdBy}`).emit('campaign-initiate', {
+      _id: task._id
+    })
   } catch (error) {
     console.log(error)
     appErrorLog({type: 'campaignTaskInitiate', task, error: error.stack})

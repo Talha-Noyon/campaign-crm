@@ -15,6 +15,9 @@ export function useSocketNotification(actionFunction?: ActionFunction) {
       updateCampaignMetrics(campaignMetric)
     })
     if (actionFunction) {
+      socket.on('campaign-initiate', () => {
+        actionFunction()
+      })
       actionFunction().then((data: CampaignMetrics[]) => {
         addCampaignMetrics(data)
         console.log({data})
@@ -22,7 +25,7 @@ export function useSocketNotification(actionFunction?: ActionFunction) {
     }
 
     return () => {
-      removeSocketListeners(socket, ['campaign-update'])
+      removeSocketListeners(socket, ['campaign-update', 'campaign-initiate'])
     }
   }, [actionFunction, addCampaignMetrics, updateCampaignMetrics])
 

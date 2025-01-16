@@ -32,5 +32,7 @@ const campaignSchema = new mongoose.Schema(
   {timestamps: true}
 )
 
+campaignSchema.index({createdBy: 1})
+
 const Campaign = mongoose.model('Campaign', campaignSchema)
 export default Campaign
