@@ -18,6 +18,8 @@ A professional and interactive React + TypeScript application for monitoring cam
 - **Real-Time Updates**: Socket.io
 
 ## Getting Started
+To check out the live version of the application, visit: [Live App Link](https://campaign-crm-production.up.railway.app/auth)
+
 
 ### Prerequisites
 
