@@ -34,50 +34,16 @@ async function changeCampaignStatus(task, statusDetailsByRecipients) {
 }
 
 /**
- * Initiate a campaign task.
- * @param {import('#shared/types/index').Task} task - The task data from the RabbitMQ message.
- */
-async function campaignTaskInitiate(task) {
-  const processingQueueName = 'processing-queue'
-  const statusDetailsByRecipients = {}
-  try {
-    for (const recipient of task.recipients) {
-      // need socket notification here
-      statusDetailsByRecipients[recipient] = {processStartTime: getTimestamp()}
-    }
-
-    // Initiate task data to the database as a pending status
-    const campaign = new CampaignModel({
-      campaignName: task.campaignName,
-      messageContent: task.messageContent,
-      recipients: task.recipients,
-      scheduleTime: task.scheduleTime,
-      createdBy: task.createdBy,
-      statusDetailsByRecipients,
-      status: 'pending'
-    })
-    const savedData = await campaign.save()
-    task._id = savedData._id.toString()
-    sendTaskToQueue(processingQueueName, task)
-    socketIO.in(`user_${task.createdBy}`).emit('campaign-initiate', {
-      _id: task._id
-    })
-  } catch (error) {
-    console.log(error)
-    appErrorLog({type: 'campaignTaskInitiate', task, error: error.stack})
-  }
-}
-
-/**
  * Processes a campaign task.
  * @param {import('#shared/types/index').Task} task - The task data from the RabbitMQ message.
  */
 async function campaignTaskProcessing(task) {
   try {
+    console.log({task})
     task.successCount = 0
     task.failureCount = 0
     // need socket notification here
-    const {statusDetailsByRecipients} = await CampaignModel.findOneAndUpdate(
+    const campaign = await CampaignModel.findOneAndUpdate(
       {_id: task._id},
       {
         $set: {
@@ -85,7 +51,7 @@ async function campaignTaskProcessing(task) {
         }
       }
     ).select('statusDetailsByRecipients')
-
+    const {statusDetailsByRecipients = {}} = campaign
     for (const recipient of task.recipients) {
       statusDetailsByRecipients[recipient] = {
         ...statusDetailsByRecipients[recipient],
@@ -122,8 +88,7 @@ async function campaignTaskProcessing(task) {
 
 export async function startWorker() {
   const campaignQueues = {
-    'pending-queue-when-initiate': campaignTaskInitiate,
-    'processing-queue': campaignTaskProcessing
+    'queue-processing': campaignTaskProcessing
   }
   for (const queueName in campaignQueues) {
     const processorFunction = campaignQueues[queueName]

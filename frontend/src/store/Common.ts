@@ -36,7 +36,7 @@ export const createCommonSlice: Slice<CommonSlice> = (set, get) => ({
   addBellNotification(newNotification: BellNotification) {
     const currentNotifications = get().bellNotifications
     set({
-      bellNotifications: [...currentNotifications, newNotification].slice(-15)
+      bellNotifications: [...currentNotifications, newNotification]
     })
   },
   addCampaignMetrics(currentMetrics: CampaignMetrics[]) {
