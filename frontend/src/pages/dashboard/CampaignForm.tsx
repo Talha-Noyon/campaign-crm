@@ -1,3 +1,4 @@
+import {type CampaignMetrics} from '@shared/types'
 import Tagify, {type TagifyTagsReactProps} from '@yaireo/tagify/dist/react.tagify'
 import '@yaireo/tagify/dist/tagify.css'
 import {ErrorMessage, Field, Formik} from 'formik'
@@ -7,6 +8,7 @@ import * as Yup from 'yup'
 import {DatePicker} from '@/components/DatePicker'
 
 import {createCampaign} from '@/api'
+import {useStore} from '@/store'
 
 import {getTodayRangeValue} from '@/utils/Common'
 
@@ -66,11 +68,13 @@ const categoryOptions = [
 
 type Props = {
   toggleCampaignForm: () => void
-  getCampaign: () => void
+  getCampaign: () => Promise<CampaignMetrics[]>
 }
 
 const CampaignForm: React.FC<Props> = ({toggleCampaignForm, getCampaign}) => {
   const {start, end} = getTodayRangeValue()
+
+  const resetCampaignMetrics = useStore((state) => state.resetCampaignMetrics)
   return (
     <div className="tw-mb-6 tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white tw-p-6 tw-shadow-lg">
       <h2 className="tw-mb-4 tw-text-xl tw-font-semibold tw-text-gray-700">Create New Campaign</h2>
@@ -87,7 +91,9 @@ const CampaignForm: React.FC<Props> = ({toggleCampaignForm, getCampaign}) => {
           const response = await createCampaign(values)
           console.log({response})
           toggleCampaignForm()
-          getCampaign()
+          getCampaign().then((data) => {
+            resetCampaignMetrics(data)
+          })
           resetForm()
         }}
       >

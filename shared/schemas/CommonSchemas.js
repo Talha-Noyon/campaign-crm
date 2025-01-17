@@ -17,6 +17,7 @@ export const TaskSchema = z.object({
   _id: z.string(),
   campaignName: z.string(),
   messageContent: z.string(),
+  retryCount: z.number().default(0),
   successCount: z.number().default(0),
   failureCount: z.number().default(0),
   recipients: z.array(z.string().email()),

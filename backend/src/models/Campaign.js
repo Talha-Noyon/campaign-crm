@@ -14,6 +14,7 @@ const campaignSchema = new mongoose.Schema(
     messageContent: {type: String, required: true},
     recipients: [{type: String, required: true}],
     scheduleTime: {type: {start: String, end: String}, required: true},
+    retryCount: {type: Number, default: 0},
     successCount: {type: Number, default: 0},
     failureCount: {type: Number, default: 0},
     statusDetailsByRecipients: {
@@ -23,7 +24,7 @@ const campaignSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['pending', 'processing', 'completed'],
-      default: 'Pending'
+      default: 'pending'
     },
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     isApproved: {type: Boolean, default: false},

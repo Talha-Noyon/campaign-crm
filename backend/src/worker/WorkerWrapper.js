@@ -1,5 +1,10 @@
 import {getChannel} from '#utils/RabbitMQ.js'
 
+/**
+ * Generic worker wrapper for RabbitMQ tasks.
+ * @param {string} queueName - The name of the queue to consume from.
+ * @param {import('#shared/types').Task} task - The name of the task from queue.
+ */
 export function sendTaskToQueue(queueName, task) {
   const channel = getChannel()
   channel.sendToQueue(queueName, Buffer.from(JSON.stringify(task)), {
