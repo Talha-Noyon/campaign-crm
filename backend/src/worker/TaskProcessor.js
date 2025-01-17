@@ -5,7 +5,7 @@ import {socketIO} from '#utils/Socket.js'
 
 import {sendCampaignEmails} from '#services/EmailService.js'
 import {appErrorLog} from '#services/Log.js'
-import {createWorker, sendTaskToQueue} from '#worker/WorkerWrapper.js'
+import {createWorker} from '#worker/WorkerWrapper.js'
 
 /**
  * Mark as completed a campaign task.
